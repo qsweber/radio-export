@@ -10,6 +10,8 @@ setup(
     packages=find_packages(exclude=('tests',)),
     install_requires=(
         'BeautifulSoup4',
+        'requests',
+        'typing',
     ),
     entry_points={
         'console_scripts': (

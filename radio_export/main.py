@@ -4,7 +4,7 @@ import json
 import os
 import requests
 
-BASE_URL = 'https://api.spotify.com/v1'
+BASE_URL = 'https://api.spotify.com'
 
 
 def _get_access_token():
@@ -56,12 +56,15 @@ def _get_user_id(session):
 
 
 def _get_spotify_track_from_song(session, song):
-    query = 'track:{}+artist:{}'.format(song.song, song.artist)
+    query = 'track:{}+artist:{}'.format(
+        song.song,
+        song.artist,
+    )
 
     payload = {'query': query, 'type': 'track', 'limit': '1'}
     payload_str = '&'.join('{}={}'.format(k, v) for k, v in payload.items())
 
-    r = requests.get(
+    r = session.get(
         '{}/v1/search?{}'.format(BASE_URL, payload_str),
     )
     r_text = json.loads(r.text)
@@ -69,8 +72,7 @@ def _get_spotify_track_from_song(session, song):
     try:
         return r_text['tracks']['items'][0]['uri']
     except:
-        print(song)
-        return ''
+        return None
 
 
 def _get_playlist_id_from_name(session, playlist_name, user_id):
@@ -97,11 +99,20 @@ def _get_playlist_url(playlist_id, user_id):
 
 
 def _get_song_uris_in_playlist_id(session, playlist_id, user_id):
-    r = session.get(_get_playlist_url(playlist_id, user_id))
-    return [
-        item['track']['uri']
-        for item in json.loads(r.text)['items']
-    ]
+    url = _get_playlist_url(playlist_id, user_id)
+    uris = []
+    while True:
+        r = session.get(url)
+        r_text = json.loads(r.text)
+        uris += [
+            item['track']['uri']
+            for item in r_text['items']
+        ]
+        url = r_text.get('next')
+        if not url:
+            break
+
+    return uris
 
 
 def _delete_songs_from_playlist(session, playlist_id, user_id, song_uris):
@@ -144,8 +155,10 @@ def run(station, playlist_name):
         for song in songs
     ]
 
+    tracks = [track for track in tracks if track]
+
     user_id = _get_user_id(session)
-    playlist_id = _get_playlist_id_from_name(session, playlist_name)
+    playlist_id = _get_playlist_id_from_name(session, playlist_name, user_id)
 
     current_uris = _get_song_uris_in_playlist_id(
         session,
@@ -153,11 +166,9 @@ def run(station, playlist_name):
         user_id,
     )
 
-    to_add = set(tracks) - set(current_uris)
-    to_delete = set(current_uris) - set(tracks)
+    _delete_songs_from_playlist(session, playlist_id, user_id, current_uris)
 
-    _delete_songs_from_playlist(session, playlist_id, user_id, to_delete)
-    _add_songs_to_playlist(session, playlist_id, user_id, to_add)
+    _add_songs_to_playlist(session, playlist_id, user_id, tracks)
 
 
 def main():

@@ -11,4 +11,9 @@ setup(
     install_requires=(
         'BeautifulSoup4',
     ),
+    entry_points={
+        'console_scripts': (
+            'run-radio-export = radio_export.main:main',
+        )
+    },
 )

@@ -38,7 +38,10 @@ def get_current_songs():
     soup = BeautifulSoup(foo.text, "html.parser")
     body = soup.find('div', {'itemprop': 'articleBody'})
 
-    title = body.find('div', {'class': 'page-header'}).find_next('h2').text.strip()
+    title = body.find(
+        'div',
+        {'class': 'page-header'}
+    ).find_next('h2').text.strip()
 
     rows = [
         row.text

@@ -1,7 +1,10 @@
+import argparse
 import importlib
 import json
 import os
 import requests
+
+BASE_URL = 'https://api.spotify.com/v1'
 
 
 def _get_access_token():
@@ -47,7 +50,7 @@ def _raise_not_ok(r, *args, **kwargs):
 
 
 def _get_user_id(session):
-    r = session.get('https://api.spotify.com/v1/me')
+    r = session.get('{}/v1/me'.format(BASE_URL))
 
     return json.loads(r.text)['id']
 
@@ -59,7 +62,7 @@ def _get_spotify_track_from_song(session, song):
     payload_str = '&'.join('{}={}'.format(k, v) for k, v in payload.items())
 
     r = requests.get(
-        'https://api.spotify.com/v1/search?{}'.format(payload_str),
+        '{}/v1/search?{}'.format(BASE_URL, payload_str),
     )
     r_text = json.loads(r.text)
 
@@ -72,7 +75,7 @@ def _get_spotify_track_from_song(session, song):
 
 def _get_playlist_id_from_name(session, playlist_name, user_id):
     r = session.get(
-        "https://api.spotify.com/v1/users/" + user_id + "/playlists",
+        '{}/v1/users/{}/playlists'.format(BASE_URL, user_id)
     )
     playlists = json.loads(r.text)
 
@@ -85,10 +88,16 @@ def _get_playlist_id_from_name(session, playlist_name, user_id):
     return playlist_id
 
 
-def _get_song_uris_in_playlist_id(session, playlist_id, user_id):
-    r = session.get(
-        "https://api.spotify.com/v1/users/" + user_id + "/playlists/" + playlist_id + "/tracks",
+def _get_playlist_url(playlist_id, user_id):
+    return '{}/v1/users/{}/playlists/{}/tracks'.format(
+        BASE_URL,
+        user_id,
+        playlist_id,
     )
+
+
+def _get_song_uris_in_playlist_id(session, playlist_id, user_id):
+    r = session.get(_get_playlist_url(playlist_id, user_id))
     return [
         item['track']['uri']
         for item in json.loads(r.text)['items']
@@ -96,19 +105,19 @@ def _get_song_uris_in_playlist_id(session, playlist_id, user_id):
 
 
 def _delete_songs_from_playlist(session, playlist_id, user_id, song_uris):
-    url = "https://api.spotify.com/v1/users/" + user_id + "/playlists/" + playlist_id + "/tracks"
+    url = _get_playlist_url(playlist_id, user_id)
     for uri in song_uris:
         payload = json.dumps({"tracks": [{"uri": uri}]})
         session.delete(url, data=payload)
 
 
 def _add_songs_to_playlist(session, playlist_id, user_id, song_uris):
-    url = "https://api.spotify.com/v1/users/" + user_id + "/playlists/" + playlist_id + "/tracks"
+    url = _get_playlist_url(playlist_id, user_id)
     for uri in song_uris:
         if uri == '':
             continue
         payload = {'uris': uri}
-        r = session.post(url, params=payload)
+        session.post(url, params=payload)
 
 
 def _get_module(subpackage, module):
@@ -120,9 +129,9 @@ def _get_module(subpackage, module):
     return importlib.import_module(module_name)
 
 
-def main(station, playlist_name):
+def run(station, playlist_name):
     station_module = _get_module(
-        subpackage='station',
+        subpackage='stations',
         module=station,
     )
 
@@ -149,3 +158,13 @@ def main(station, playlist_name):
 
     _delete_songs_from_playlist(session, playlist_id, user_id, to_delete)
     _add_songs_to_playlist(session, playlist_id, user_id, to_add)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--station', required=True)
+    parser.add_argument('--playlist-name', required=True)
+
+    cli_args = parser.parse_args()
+
+    run(cli_args.station, cli_args.playlist_name)

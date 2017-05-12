@@ -9,7 +9,7 @@ radio station into a Spotify playlist. This is useful if
 
 I currently have it set to integrate with my favorite radio station, [WXPN](http://www.xpn.org/).
 
-You can listen to that station here: [XPN Live](https://embed.spotify.com/?uri=spotify%3Auser%3A12758562%3Aplaylist%3A1PojFHqjnLoHWrBBQNoNYO)
+You can listen to that station here: [XPN Live](https://open.spotify.com/user/12758562/playlist/1PojFHqjnLoHWrBBQNoNYO)
 
 ## Adding new stations
 

@@ -115,20 +115,27 @@ def _get_song_uris_in_playlist_id(session, playlist_id, user_id):
     return uris
 
 
+def _chunks(l, n):
+    '''
+    Yield successive n-sized chunks from l.
+    http://stackoverflow.com/questions/312443/
+    '''
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
+
+
 def _delete_songs_from_playlist(session, playlist_id, user_id, song_uris):
     url = _get_playlist_url(playlist_id, user_id)
-    for uri in song_uris:
-        payload = json.dumps({"tracks": [{"uri": uri}]})
+    for uri_chunk in _chunks(song_uris, 50):
+        payload = json.dumps({"tracks": [{"uri": uri} for uri in uri_chunk]})
         session.delete(url, data=payload)
 
 
 def _add_songs_to_playlist(session, playlist_id, user_id, song_uris):
     url = _get_playlist_url(playlist_id, user_id)
-    for uri in song_uris:
-        if uri == '':
-            continue
-        payload = {'uris': uri}
-        session.post(url, params=payload)
+    for uri_chunk in _chunks(song_uris, 50):
+        payload = json.dumps({'uris': uri_chunk})
+        session.post(url, data=payload)
 
 
 def _get_module(subpackage, module):

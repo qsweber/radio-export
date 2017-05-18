@@ -75,17 +75,31 @@ def _get_spotify_track_from_song(session, song):
         return None
 
 
+def _create_playlist(session, playlist_name, user_id):
+    r = session.post(
+        '{}/v1/users/{}/playlists'.format(BASE_URL, user_id),
+        data=json.dumps({'name': playlist_name})
+    )
+
+    return json.loads(r.text)['id']
+
+
 def _get_playlist_id_from_name(session, playlist_name, user_id):
     r = session.get(
         '{}/v1/users/{}/playlists'.format(BASE_URL, user_id)
     )
     playlists = json.loads(r.text)
 
-    playlist_id = [
+    matches = [
         playlist_dict['id']
         for playlist_dict in playlists['items']
         if playlist_dict['name'] == playlist_name
-    ][0]
+    ]
+
+    if matches:
+        playlist_id = matches[0]
+    else:
+        playlist_id = _create_playlist(session, playlist_name, user_id)
 
     return playlist_id
 
@@ -112,7 +126,7 @@ def _get_song_uris_in_playlist_id(session, playlist_id, user_id):
         if not url:
             break
 
-    return uris
+    return set(uris)
 
 
 def _chunks(l, n):
@@ -120,6 +134,7 @@ def _chunks(l, n):
     Yield successive n-sized chunks from l.
     http://stackoverflow.com/questions/312443/
     '''
+    l = list(l)
     for i in range(0, len(l), n):
         yield l[i:i + n]
 
@@ -162,7 +177,7 @@ def run(station, playlist_name):
         for song in songs
     ]
 
-    tracks = [track for track in tracks if track]
+    tracks = set([track for track in tracks if track])
 
     user_id = _get_user_id(session)
     playlist_id = _get_playlist_id_from_name(session, playlist_name, user_id)
@@ -173,9 +188,14 @@ def run(station, playlist_name):
         user_id,
     )
 
-    _delete_songs_from_playlist(session, playlist_id, user_id, current_uris)
+    to_delete = current_uris - tracks
+    to_add = tracks - current_uris
 
-    _add_songs_to_playlist(session, playlist_id, user_id, tracks)
+    if to_delete:
+        _delete_songs_from_playlist(session, playlist_id, user_id, to_delete)
+
+    if to_add:
+        _add_songs_to_playlist(session, playlist_id, user_id, tracks)
 
 
 def main():

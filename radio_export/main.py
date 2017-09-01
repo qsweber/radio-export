@@ -2,6 +2,7 @@ import argparse
 import importlib
 import json
 import os
+import time
 import requests
 
 BASE_URL = 'https://api.spotify.com'
@@ -56,6 +57,7 @@ def _get_user_id(session):
 
 
 def _get_spotify_track_from_song(session, song):
+    time.sleep(1)
     query = 'track:{}+artist:{}'.format(
         song.song,
         song.artist,
@@ -188,14 +190,14 @@ def run(station, playlist_name):
         user_id,
     )
 
-    to_delete = current_uris - tracks
-    to_add = tracks - current_uris
+    # to_delete = current_uris - tracks
+    # to_add = tracks - current_uris
 
-    if to_delete:
-        _delete_songs_from_playlist(session, playlist_id, user_id, to_delete)
+    # if to_delete:
+    _delete_songs_from_playlist(session, playlist_id, user_id, current_uris)
 
-    if to_add:
-        _add_songs_to_playlist(session, playlist_id, user_id, tracks)
+    # if to_add:
+    _add_songs_to_playlist(session, playlist_id, user_id, tracks)
 
 
 def main():

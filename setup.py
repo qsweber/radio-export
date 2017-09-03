@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='radio-export',
-    version='0.0.1',
+    version='0.0.2',
     description='fill in',
     author='Quinn Weber',
     maintainer='Quinn Weber',

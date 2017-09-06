@@ -1,11 +1,15 @@
 import argparse
 import importlib
 import json
+import logging
 import os
 import time
 import requests
 
+
 BASE_URL = 'https://api.spotify.com'
+
+logger = logging.getLogger(__name__)
 
 
 def _get_access_token():

@@ -1,9 +1,13 @@
 from datetime import datetime
+import logging
 import requests
 
 from bs4 import BeautifulSoup
 
 from radio_export.song import Song
+
+
+logger = logging.getLogger(__name__)
 
 
 def _get_song_from_row(row, title):
@@ -14,8 +18,9 @@ def _get_song_from_row(row, title):
         artist = parts[0].strip()
         song = parts[1].strip()
     else:
-        print(row)
-        return {}
+        logger.warning('Could not parse: {}'.format(row))
+
+        return None
 
     return Song(
         datetime=datetime.strptime(
@@ -57,7 +62,9 @@ def get_current_songs():
         '|Echoes|' not in row.text
     ]
 
-    return [
+    songs = [
         _get_song_from_row(row, title)
         for row in rows
     ]
+
+    return [song for song in songs if song]

@@ -33,7 +33,9 @@ def get_current_songs():
     rows = soup.find('div', {'id': 'page'}).find('table').find_all('tr')
     rows.pop(0)
 
-    return [
+    songs = [
         _get_song_from_row(row)
         for row in rows
     ]
+
+    return [song for song in songs if song]

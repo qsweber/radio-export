@@ -12,10 +12,6 @@ setup(
         'BeautifulSoup4',
         'requests',
         'typing',
+        'Flask',
     ),
-    entry_points={
-        'console_scripts': (
-            'run-radio-export = radio_export.main:main',
-        )
-    },
 )

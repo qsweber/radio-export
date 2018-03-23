@@ -1,5 +1,7 @@
 # Radio Export
 
+[![Build Status](https://travis-ci.org/qsweber/radio-export.svg?branch=master)](https://travis-ci.org/qsweber/radio-export) [![Coverage Status](https://coveralls.io/repos/github/qsweber/radio-export/badge.svg?branch=master)](https://coveralls.io/github/qsweber/radio-export?branch=master)
+
 This script integrates with the Spotify API to turn your favorite
 radio station into a Spotify playlist. This is useful if
 

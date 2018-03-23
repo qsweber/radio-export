@@ -1,4 +1,4 @@
-import radio_export.main as module
+import radio_export.clients.spotify as module
 
 
 def test_chunks():

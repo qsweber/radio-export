@@ -1,41 +1,45 @@
 from datetime import datetime
-import requests
 
 from bs4 import BeautifulSoup
 
-from radio_export.song import Song
+from radio_export.stations.base import BaseStation
+from radio_export.models.song import Song
 
 
-def _get_song_from_row(row):
-    td_with_text = [td.text for td in row.find_all('td') if td.text]
+class Wcnr(BaseStation):
+    def __init__(self):
+        super(Wcnr, self).__init__(
+            'http://1061thecorner.com/most-played/',
+            'The Corner Live',
+        )
 
-    artist = td_with_text[1]
+    def get_current_songs(self):
+        response = self.scrape()
 
-    song = td_with_text[2]
+        soup = BeautifulSoup(response.text, "html.parser")
 
-    return Song(
-        datetime=datetime.now(),
-        artist=artist,
-        song=song,
-    )
+        rows = soup.find('div', {'id': 'page'}).find('table').find_all('tr')
+        rows.pop(0)
 
+        songs = [
+            self.get_song_from_row(row)
+            for row in rows
+        ]
 
-def get_current_songs():
-    url = 'http://1061thecorner.com/most-played/'
+        return [song for song in songs if song]
 
-    foo = requests.get(
-        url,
-        headers={'User-Agent': 'Mozilla/5.0'},
-    )
+    def get_song_from_row(self, row):
+        td_with_text = [td.text for td in row.find_all('td') if td.text]
 
-    soup = BeautifulSoup(foo.text, "html.parser")
+        if (len(td_with_text) < 3):
+            return None
 
-    rows = soup.find('div', {'id': 'page'}).find('table').find_all('tr')
-    rows.pop(0)
+        artist = td_with_text[1]
 
-    songs = [
-        _get_song_from_row(row)
-        for row in rows
-    ]
+        song = td_with_text[2]
 
-    return [song for song in songs if song]
+        return Song(
+            datetime=datetime.now(),
+            artist=artist,
+            song=song,
+        )

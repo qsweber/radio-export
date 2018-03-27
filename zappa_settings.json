@@ -6,6 +6,7 @@
         "runtime": "python3.6",
         "s3_bucket": "zappa-vmdaiuu2f",
         "log_level": "INFO",
+        "keep_warm": false,
         "timeout_seconds": 60,
         "events": [
             {

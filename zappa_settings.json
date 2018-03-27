@@ -11,7 +11,7 @@
         "events": [
             {
                 "function": "radio_export.app.create_xpn_playlist",
-                "expression": "cron(18 6 ? * * *)"
+                "expression": "cron(18 3 ? * * *)"
             },
             {
                 "function": "radio_export.app.create_wcnr_playlist",

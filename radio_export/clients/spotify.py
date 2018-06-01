@@ -59,7 +59,7 @@ class SpotifyClient(object):
         return session
 
     def _get_user_id(self):
-        r = self.session.get('{}/v1/me'.format(self.BASE_URL))
+        r = self._request('{}/v1/me'.format(self.BASE_URL))
 
         return json.loads(r.text)['id']
 
@@ -72,7 +72,7 @@ class SpotifyClient(object):
         return json.loads(r.text)['id']
 
     def _get_playlist_id(self, playlist_name):
-        r = self.session.get(
+        r = self._request(
             '{}/v1/users/{}/playlists'.format(self.BASE_URL, self.user_id)
         )
 
@@ -102,7 +102,7 @@ class SpotifyClient(object):
 
         uris = []
         while True:
-            r = self.session.get(url)
+            r = self._request(url)
             r_text = json.loads(r.text)
             uris += [
                 item['track']['uri']
@@ -150,7 +150,7 @@ class SpotifyClient(object):
 
 
 def raise_if_not_ok(r, *args, **kwargs):
-    if not r.ok:
+    if not r.ok and r.status_code != 429:
         error_message = 'error code {}, reason {}, text {}'.format(
             r.status_code,
             r.reason,

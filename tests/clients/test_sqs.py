@@ -2,7 +2,7 @@ import datetime
 import json
 import uuid
 
-import service_template.clients.sqs_v2 as module
+import service_template.clients.sqs as module
 from tests.app.requests.sqs_message import test_input, test_output
 
 

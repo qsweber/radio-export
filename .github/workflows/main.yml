@@ -38,7 +38,7 @@ jobs:
       - name: deploy dev
         run: |
           source deploy-env/bin/activate
-          zappa update dev
+          zappa deploy dev
       - name: create production aws resources
         if: github.event_name == 'push'
         run: aws sqs create-queue --queue-name PROD-service-template-example
@@ -46,4 +46,4 @@ jobs:
         if: github.event_name == 'push'
         run: |
           source deploy-env/bin/activate
-          zappa update production
+          zappa deploy production

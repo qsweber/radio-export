@@ -2,7 +2,6 @@
     "dev": {
         "app_function": "src.service_template.app.http.app",
         "aws_region": "us-west-2",
-        "profile_name": "default",
         "project_name": "service-template",
         "runtime": "python3.8",
         "s3_bucket": "zappa-w4zj9g9gr",
@@ -23,7 +22,6 @@
     "production": {
         "app_function": "src.service_template.app.http.app",
         "aws_region": "us-west-2",
-        "profile_name": "default",
         "project_name": "service-template",
         "runtime": "python3.8",
         "s3_bucket": "zappa-w4zj9g9gr",

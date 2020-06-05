@@ -11,7 +11,7 @@
         "events": [{
             "function": "src.service_template.app.handlers.example",
             "event_source": {
-                "arn": "arn:aws:sqs:us-west-2:120356305272:DEV-service-template-example",
+                "arn": "arn:aws:sqs:us-west-2:120356305272:DEV-service-template-example2",
                 "batch_size": 1,
                 "enabled": false
             }
@@ -32,7 +32,7 @@
         "events": [{
             "function": "src.service_template.app.handlers.example",
             "event_source": {
-                "arn": "arn:aws:sqs:us-west-2:120356305272:PROD-service-template-example",
+                "arn": "arn:aws:sqs:us-west-2:120356305272:PROD-service-template-example2",
                 "batch_size": 1,
                 "enabled": false
             }

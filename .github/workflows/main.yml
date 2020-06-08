@@ -47,4 +47,4 @@ jobs:
         if: github.event_name == 'push'
         run: |
           source deploy-env/bin/activate
-          zappa update production
+          zappa deploy production

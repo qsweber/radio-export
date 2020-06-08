@@ -35,14 +35,14 @@ jobs:
           pip install -r requirements.txt
           pip install zappa
       - name: create dev aws resources
-        run: aws sqs create-queue --queue-name DEV-service-template-example2 --attributes "VisibilityTimeout=180"
+        run: aws sqs create-queue --queue-name DEV-service-template-example --attributes "VisibilityTimeout=180"
       - name: deploy dev
         run: |
           source deploy-env/bin/activate
           zappa update dev
       - name: create production aws resources
         if: github.event_name == 'push'
-        run: aws sqs create-queue --queue-name PROD-service-template-example2 --attributes "VisibilityTimeout=180"
+        run: aws sqs create-queue --queue-name PROD-service-template-example --attributes "VisibilityTimeout=180"
       - name: deploy production
         if: github.event_name == 'push'
         run: |

@@ -39,12 +39,12 @@ jobs:
       - name: deploy dev
         run: |
           source deploy-env/bin/activate
-          python deploy_helper.ts dev
+          python deploy_helper.py dev
           zappa update dev
 
       - name: deploy production
         if: github.event_name == 'push'
         run: |
           source deploy-env/bin/activate
-          python deploy_helper.ts production
+          python deploy_helper.py production
           zappa update production

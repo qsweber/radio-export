@@ -10,6 +10,7 @@ if __name__ == "__main__":
     queues_to_create = [
         event["event_source"]["arn"].split(":")[-1]
         for event in data[sys.argv[1]]["events"]
+        if "event_source" in event
     ]
 
     client = boto3.client("sqs")

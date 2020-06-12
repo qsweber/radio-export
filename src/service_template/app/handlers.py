@@ -25,6 +25,22 @@ def sqsHandler(func):
     return wrapper
 
 
+def cronHandler(func):
+    def wrapper():
+        try:
+            func()
+        except Exception:
+            sentry.captureException()
+            raise
+
+    return wrapper
+
+
 @sqsHandler
-def example(message: SqsMessage) -> None:
+def event_driven_task(message: SqsMessage) -> None:
     logger.info("hey! {}".format(message.message_id))
+
+
+@cronHandler
+def time_driven_task():
+    logger.info("it's time!")

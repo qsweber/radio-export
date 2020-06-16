@@ -1,0 +1,10 @@
+black
+flake8
+lxml
+ipython
+mypy
+pytest
+pytest-mock
+pytest-cov
+python-coveralls
+zappa

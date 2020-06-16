@@ -1,0 +1,54 @@
+{
+    "dev": {
+        "app_function": "src.service_template.app.http.app",
+        "aws_region": "us-west-2",
+        "project_name": "service-template",
+        "runtime": "python3.8",
+        "s3_bucket": "zappa-w4zj9g9gr",
+        "log_level": "INFO",
+        "timeout_seconds": 55,
+        "events": [{
+                "function": "src.service_template.app.handlers.event_driven_task",
+                "event_source": {
+                    "arn": "arn:aws:sqs:us-west-2:120356305272:DEV-service-template-event-driven",
+                    "batch_size": 1,
+                    "enabled": false
+                }
+            },
+            {
+                "function": "src.service_template.app.handlers.time_driven_task",
+                "expression": "cron(18 3 ? * * *)",
+                "enabled": false
+            }
+        ],
+        "aws_environment_variables": {
+            "STAGE": "DEV"
+        }
+    },
+    "production": {
+        "app_function": "src.service_template.app.http.app",
+        "aws_region": "us-west-2",
+        "project_name": "service-template",
+        "runtime": "python3.8",
+        "s3_bucket": "zappa-w4zj9g9gr",
+        "log_level": "INFO",
+        "timeout_seconds": 55,
+        "events": [{
+                "function": "src.service_template.app.handlers.event_driven_task",
+                "event_source": {
+                    "arn": "arn:aws:sqs:us-west-2:120356305272:PROD-service-template-event-driven",
+                    "batch_size": 1,
+                    "enabled": false
+                }
+            },
+            {
+                "function": "src.service_template.app.handlers.time_driven_task",
+                "expression": "cron(18 3 ? * * *)",
+                "enabled": false
+            }
+        ],
+        "aws_environment_variables": {
+            "STAGE": "PROD"
+        }
+    }
+}

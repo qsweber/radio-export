@@ -6,7 +6,7 @@
   "python.linting.pylintEnabled": false,
   "python.linting.mypyEnabled": true,
   "python.linting.mypyArgs": [
-    "src/service_template",
+    "src/radio_export",
     "--strict"
   ],
   "cSpell.words": [

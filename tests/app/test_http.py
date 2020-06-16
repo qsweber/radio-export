@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-import service_template.app.http as module
+import radio_export.app.http as module
 
 
 @pytest.fixture

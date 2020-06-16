@@ -1,9 +1,9 @@
 from setuptools import setup
 
 setup(
-    name="service-template",
+    name="radio-export",
     version="0.0.1",
-    description="Service Template",
+    description="Radio Export",
     author="Quinn Weber",
     maintainer="Quinn Weber",
     maintainer_email="quinn@quinnweber.com",

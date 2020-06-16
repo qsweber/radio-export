@@ -1,16 +1,27 @@
-# Service Template
+# Radio Export
 
-![CI](https://github.com/qsweber/service-template/workflows/CI/badge.svg) ![Test Coverage](https://img.shields.io/badge/tests-86%25-yellow) ![Type Coverage](https://img.shields.io/badge/types-67%25-red)
+[![Build Status](https://travis-ci.org/qsweber/radio-export.svg?branch=master)](https://travis-ci.org/qsweber/radio-export) [![Coverage Status](https://coveralls.io/repos/github/qsweber/radio-export/badge.svg?branch=master)](https://coveralls.io/github/qsweber/radio-export?branch=master)
 
-This is a template for my backend services.
+This script integrates with the Spotify API to turn your favorite
+radio station into a Spotify playlist. This is useful if
 
-Technologies used:
+1. you don't have access to the radio station (e.g. you live in a different city)
+2. you want to take your radio station offline with you (e.g. on a run)
+3. you don't feel like listening to commericals
 
-- python3.8
-- tox (automation)
-- py.test (testing)
-- black (formatter)
-- mypy (type hints)
-- AWS (Lambda, DynamoDB, SNS, SQS)
-- Zappa (deployment)
-- GitHub Actions (CI/CD)
+I currently have it set to integrate with my favorite radio station, [WXPN](http://www.xpn.org/).
+
+You can listen to that station here: [XPN Live](https://open.spotify.com/user/12758562/playlist/1PojFHqjnLoHWrBBQNoNYO)
+
+## Adding new stations
+
+If you would like to integrate a new radio station (or any feed of music), just add a new module to `radio_export/stations` with a function called `get_current_songs` which
+returns a list of `Song` objects (see `radio_export/song`).
+
+Then, run the following:
+
+    radio-export \
+        --station <name of module> \
+        --playlist-name <name of spotify playlist>
+
+It will populate the playlist with the songs returned by `radio_export/stations/<name of station>:get_current_songs`

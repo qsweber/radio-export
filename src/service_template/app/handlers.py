@@ -1,18 +1,21 @@
 import logging
+import typing
 
-from raven import Client
-from raven.transport.requests import RequestsHTTPTransport
+from raven import Client  # type: ignore
+from raven.transport.requests import RequestsHTTPTransport  # type: ignore
 
 from service_template.clients.sqs import SqsMessage
-from service_template.service_context import service_context
+from service_template.app.service_context import service_context
 
 
 sentry = Client(transport=RequestsHTTPTransport)
 logger = logging.getLogger(__name__)
 
 
-def sqsHandler(func):
-    def wrapper(event: dict, context: dict):
+def sqsHandler(
+    func: typing.Callable[[SqsMessage], None]
+) -> typing.Callable[[typing.Any], typing.Any]:
+    def wrapper(event: typing.Dict[str, typing.Any]) -> None:
         messages = service_context.clients.sqs.parse_sqs_messages(event)
         for message in messages:
             try:
@@ -25,8 +28,8 @@ def sqsHandler(func):
     return wrapper
 
 
-def cronHandler(func):
-    def wrapper():
+def cronHandler(func: typing.Callable[[], None]) -> typing.Callable[[], None]:
+    def wrapper() -> None:
         try:
             func()
         except Exception:
@@ -42,5 +45,5 @@ def event_driven_task(message: SqsMessage) -> None:
 
 
 @cronHandler
-def time_driven_task():
+def time_driven_task() -> None:
     logger.info("it's time!")

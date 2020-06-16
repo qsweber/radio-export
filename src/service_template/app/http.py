@@ -1,10 +1,12 @@
 import logging
 import json
 
+import typing
+
 from flask import Flask, jsonify, request, Response
-from raven import Client
-from raven.contrib.flask import Sentry
-from raven.transport.requests import RequestsHTTPTransport
+from raven import Client  # type: ignore
+from raven.contrib.flask import Sentry  # type: ignore
+from raven.transport.requests import RequestsHTTPTransport  # type: ignore
 
 
 app = Flask(__name__)
@@ -19,4 +21,4 @@ def example() -> Response:
     response = jsonify({"text": "ok"})
     response.headers.add("Access-Control-Allow-Origin", "*")
 
-    return response
+    return typing.cast(Response, response)

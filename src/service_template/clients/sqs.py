@@ -2,25 +2,25 @@ from datetime import datetime
 import json
 import logging
 import os
-from typing import NamedTuple, List
+import typing
 from uuid import UUID
 
-import boto3
+import boto3  # type: ignore
 
 logger = logging.getLogger(__name__)
 
 
-class SqsMessageAttributes(NamedTuple):
+class SqsMessageAttributes(typing.NamedTuple):
     approximate_receive_count: int
     sent_timestamp: datetime
     sender_id: str
     approxmate_first_receive_timestamp: datetime
 
 
-class SqsMessage(NamedTuple):
+class SqsMessage(typing.NamedTuple):
     message_id: UUID
     receipt_handle: str
-    body: dict
+    body: typing.Dict[str, typing.Any]
     attributes: SqsMessageAttributes
     md5_of_body: str
     event_source: str
@@ -34,7 +34,7 @@ class RoundTripEncoder(json.JSONEncoder):
     Copied from https://gist.github.com/simonw/7000493
     """
 
-    def default(self, obj):
+    def default(self, obj: typing.Any) -> typing.Any:
         if isinstance(obj, datetime):
             return {"_type": "datetime", "value": obj.timestamp()}
         elif isinstance(obj, UUID):
@@ -44,10 +44,10 @@ class RoundTripEncoder(json.JSONEncoder):
 
 
 class RoundTripDecoder(json.JSONDecoder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:  # type: ignore
         json.JSONDecoder.__init__(self, object_hook=self.object_hook, *args, **kwargs)
 
-    def object_hook(self, obj):
+    def object_hook(self, obj: typing.Any) -> typing.Any:
         if "_type" not in obj:
             return obj
         output_type = obj["_type"]
@@ -81,7 +81,7 @@ class SqsClient:
             region, account_id, queue_name,
         )
 
-    def _parse_sqs_message(self, raw: dict) -> SqsMessage:
+    def _parse_sqs_message(self, raw: typing.Dict[str, typing.Any]) -> SqsMessage:
         return SqsMessage(
             message_id=UUID(raw["messageId"]),
             receipt_handle=raw["receiptHandle"],
@@ -105,10 +105,14 @@ class SqsClient:
             aws_region=raw["awsRegion"],
         )
 
-    def parse_sqs_messages(self, raw: dict) -> List[SqsMessage]:
+    def parse_sqs_messages(
+        self, raw: typing.Dict[str, typing.Any]
+    ) -> typing.List[SqsMessage]:
         return [self._parse_sqs_message(m) for m in raw["Records"]]
 
-    def _send_message_internal(self, queue_name: str, message: NamedTuple) -> None:
+    def _send_message_internal(
+        self, queue_name: str, message: typing.NamedTuple
+    ) -> None:
         if not self.sqs:
             return
 
@@ -117,7 +121,9 @@ class SqsClient:
             MessageBody=json.dumps(message._asdict(), cls=RoundTripEncoder),
         )
 
-    def send_messages(self, queue_name: str, messages: List[NamedTuple]):
+    def send_messages(
+        self, queue_name: str, messages: typing.List[typing.NamedTuple]
+    ) -> None:
         for message in messages:
             self._send_message_internal(queue_name, message)
 
@@ -127,7 +133,7 @@ class SqsClient:
 
         backoff = min(sqs_message.attributes.approximate_receive_count * 10, 600)
 
-        return self.sqs.change_message_visibility(
+        self.sqs.change_message_visibility(
             QueueUrl=sqs_message.event_source_url,
             ReceiptHandle=sqs_message.receipt_handle,
             VisibilityTimeout=backoff,

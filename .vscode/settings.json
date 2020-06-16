@@ -6,7 +6,7 @@
   "python.linting.pylintEnabled": false,
   "python.linting.mypyEnabled": true,
   "python.linting.mypyArgs": [
-    "--ignore-missing-imports"
+    "--strict"
   ],
   "cSpell.words": [
     "asdict",

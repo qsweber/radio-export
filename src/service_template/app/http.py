@@ -14,9 +14,9 @@ sentry = Sentry(app, client=Client(transport=RequestsHTTPTransport,),)
 logger = logging.getLogger(__name__)
 
 
-@app.route("/api/v0/example", methods=["GET"])
-def example() -> Response:
-    logger.info("hi {}".format(json.dumps(request.args)))
+@app.route("/api/v0/status", methods=["GET"])
+def status() -> Response:
+    logger.info("recieved request with args {}".format(json.dumps(request.args)))
 
     response = jsonify({"text": "ok"})
     response.headers.add("Access-Control-Allow-Origin", "*")

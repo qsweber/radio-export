@@ -37,13 +37,6 @@ jobs:
           pip install -r requirements.txt
           pip install zappa
           pip install -e .
-
-      - name: deploy dev
-        run: |
-          source deploy-env/bin/activate
-          python deploy_helper.py dev
-          zappa update dev
-
       - name: deploy production
         if: github.event_name == 'push'
         run: |

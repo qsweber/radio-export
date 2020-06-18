@@ -1,7 +1,6 @@
 Boto3
 BeautifulSoup4
 requests
-typing
 Flask
 raven[flask]
 werkzeug

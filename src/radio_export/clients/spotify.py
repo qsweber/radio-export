@@ -22,11 +22,11 @@ class SpotifyClient(object):
         r = self.session.get(url)
 
         if r.status_code == 429:
-            retry_after = r.headers["Retry-After"]
+            retry_after = int(r.headers["Retry-After"])
             logger.info(
-                "Spotify rate-limit hit, waiting {} seconds".format(retry_after)
+                "Spotify rate-limit hit, waiting {} seconds".format(str(retry_after))
             )
-            time.sleep(typing.cast(float, retry_after))
+            time.sleep(retry_after)
             self._request(url, retry_count + 1)
 
         return r

@@ -27,6 +27,8 @@ def create_playlist(station: Station, service_context: ServiceContext) -> None:
         station.playlist_name, new_uris,
     )
 
+    logger.info("Total Songs: {}, Matched: {}".format(len(songs), len(new_uris)))
+
 
 def _find_spotify_song(
     song: Song, spotify_client: SpotifyClient

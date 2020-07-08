@@ -61,7 +61,7 @@ class RoundTripDecoder(json.JSONDecoder):
 
 class SqsClient:
     def __init__(self) -> None:
-        if os.environ.get("IS_TEST"):
+        if os.environ.get("STAGE") == "TEST":
             self.sqs = None
             return
 

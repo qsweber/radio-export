@@ -33,3 +33,8 @@ def create_xpn_playlist() -> None:
 @cronHandler
 def create_wcnr_playlist() -> None:
     create_playlist_action(service_context.stations.wcnr, service_context)
+
+
+@cronHandler
+def create_kexp_playlist() -> None:
+    create_playlist_action(service_context.stations.kexp, service_context)

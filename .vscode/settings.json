@@ -6,19 +6,7 @@
   "python.linting.pylintEnabled": false,
   "python.linting.mypyEnabled": true,
   "python.linting.mypyArgs": [
-    "src/radio_export",
     "--strict"
-  ],
-  "cSpell.words": [
-    "asdict",
-    "boto",
-    "defaultdict",
-    "excinfo",
-    "jsonify",
-    "oauth",
-    "parametrize",
-    "pytest",
-    "zfill"
   ],
   "editor.formatOnSave": true,
   "python.formatting.provider": "black"

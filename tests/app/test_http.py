@@ -17,3 +17,10 @@ def test_create_poll_http(mocker, client):
 
     assert result.status_code == 200
     assert json.loads(result.data) == {"text": "ok"}
+
+
+def test_presign(mocker, client):
+    result = client.get("/api/v0/presign", data={"abc": "bar"})
+
+    print(result.data)
+    assert result.status_code == 200

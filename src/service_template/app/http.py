@@ -1,5 +1,6 @@
 import logging
 import json
+from decimal import Decimal
 
 import typing
 
@@ -13,22 +14,38 @@ app = Flask(__name__)
 sentry = Sentry(app, client=Client(transport=RequestsHTTPTransport,),)
 logger = logging.getLogger(__name__)
 
+INPUT = typing.TypeVar("INPUT")
+OUTPUT = typing.TypeVar("OUTPUT")
 
-def f1(
-    foo: str,
-) -> typing.Callable[[typing.Callable[[int], float]], typing.Callable[[], float]]:
-    def f2(func: typing.Callable[[int], float]) -> typing.Callable[[], float]:
-        def what_gets_called() -> float:
-            return func(123)
+JSONType = typing.Dict[str, typing.Union[str, int, Decimal]]
+
+
+def typedRoute(
+    input_converter: typing.Callable[[Request], INPUT],
+    output_converter: typing.Callable[[OUTPUT], JSONType],
+) -> typing.Callable[[typing.Callable[[INPUT], OUTPUT]], typing.Callable[[], Response]]:
+    def wrapper(
+        func: typing.Callable[[INPUT], OUTPUT]
+    ) -> typing.Callable[[], Response]:
+        def what_gets_called() -> Response:
+            logger.info("recieved request {}".format(json.dumps(request.json)))
+            inpt = input_converter(request)
+            output = func(inpt)
+            output_json = output_converter(output)
+
+            response = jsonify(output_json)
+            response.headers.add("Access-Control-Allow-Origin", "*")
+
+            return typing.cast(Response, response)
 
         return what_gets_called
 
-    return f2
+    return wrapper
 
 
 @app.route("/api/v0/status", methods=["GET"])
 def status() -> Response:
-    logger.info("recieved request with args {}".format(json.dumps(request.args)))
+    logger.info("recieved request {}".format(json.dumps(request.json)))
 
     response = jsonify({"text": "ok"})
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -36,40 +53,23 @@ def status() -> Response:
     return typing.cast(Response, response)
 
 
-@f1("hi")
-def foo(baz: int) -> float:
-    return baz + 0.1
-
-
-T = typing.TypeVar("T")
-
-
-def typedRoute(
-    converter: typing.Callable[[Request], T], request2: Request
-) -> typing.Callable[[typing.Callable[[T], Response]], typing.Callable[[], Response]]:
-    foo = converter(request2)
-
-    def wrapper(func: typing.Callable[[T], Response]) -> typing.Callable[[], Response]:
-        def what_gets_called() -> Response:
-            return func(foo)
-
-        return what_gets_called
-
-    return wrapper
-
-
 class Foo(typing.NamedTuple):
+    foo: str
+
+
+class Bar(typing.NamedTuple):
     bar: str
 
 
-def fooConverter(r: Request) -> Foo:
-    return Foo(bar=r.args["abc"])
+def foo_converter(r: Request) -> Foo:
+    return Foo(foo=r.args["foo"])
 
 
-@app.route("/api/v0/presign", methods=["GET"])
-@typedRoute(fooConverter, request)
-def presign(foo: Foo) -> Response:
-    response = jsonify({"text": foo.bar})
-    response.headers.add("Access-Control-Allow-Origin", "*")
+def bar_converter(b: Bar) -> JSONType:
+    return {"bar": b.bar}
 
-    return typing.cast(Response, response)
+
+@app.route("/api/v0/status_typed", methods=["GET"])
+@typedRoute(foo_converter, bar_converter)
+def status_typed(foo: Foo) -> Bar:
+    return Bar(bar=foo.foo)

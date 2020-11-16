@@ -12,8 +12,34 @@ def client():
     yield client
 
 
-def test_create_poll_http(mocker, client):
-    result = client.get("/api/v0/status", data={"foo": "bar"})
+def test_status(mocker, client):
+    result = client.get("/api/v0/status")
 
     assert result.status_code == 200
     assert json.loads(result.data) == {"text": "ok"}
+
+
+def test_post(mocker, client):
+    result = client.post("/api/v0/foo", data={"foo": "a", "bar": "b"})
+
+    assert result.status_code == 200
+    assert json.loads(result.data) == {"foo": "a", "bar": "b"}
+
+
+def test_post_validation_fails(mocker, client):
+    result = client.post("/api/v0/foo", data={"bar": "b"})
+
+    assert result.status_code == 500
+
+
+def test_get(mocker, client):
+    result = client.get("/api/v0/foo?foo=a&bar=b")
+
+    assert result.status_code == 200
+    assert json.loads(result.data) == {"foo": "a", "bar": "b"}
+
+
+def test_get_validation_fails(mocker, client):
+    result = client.get("/api/v0/foo", data={"bar": "b"})
+
+    assert result.status_code == 500

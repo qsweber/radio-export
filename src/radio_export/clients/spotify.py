@@ -20,8 +20,9 @@ class SpotifyClient(object):
             raise Exception("retried 3 times so giving up")
 
         r = self.session.get(url)
+        r_text = json.loads(r.text)
 
-        if r.status_code == 429:
+        if r.status_code == 429 or r_text.get("error", {}).get("status"):
             retry_after = int(r.headers["Retry-After"])
             logger.info(
                 "Spotify rate-limit hit, waiting {} seconds".format(str(retry_after))

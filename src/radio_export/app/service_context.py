@@ -22,6 +22,8 @@ class ServiceContext(NamedTuple):
 
 
 service_context = ServiceContext(
-    clients=Clients(spotify=SpotifyClient(),),
+    clients=Clients(
+        spotify=SpotifyClient(),
+    ),
     stations=Stations(wcnr=Wcnr(), wxpn=Wxpn(), kexp=Kexp()),
 )

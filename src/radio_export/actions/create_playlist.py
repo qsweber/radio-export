@@ -20,11 +20,13 @@ def create_playlist(station: Station, service_context: ServiceContext) -> None:
     current_uris = service_context.clients.spotify.get_song_uris(station.playlist_name)
 
     service_context.clients.spotify.delete_songs_from_playlist(
-        station.playlist_name, current_uris,
+        station.playlist_name,
+        current_uris,
     )
 
     service_context.clients.spotify.add_songs_to_playlist(
-        station.playlist_name, new_uris,
+        station.playlist_name,
+        new_uris,
     )
 
     logger.info("Total Songs: {}, Matched: {}".format(len(songs), len(new_uris)))
@@ -34,14 +36,25 @@ def _find_spotify_song(
     song: Song, spotify_client: SpotifyClient
 ) -> typing.Optional[str]:
     try:
-        spotify_song = spotify_client.find_spotify_uri(song.song, song.artist,)
+        spotify_song = spotify_client.find_spotify_uri(
+            song.song,
+            song.artist,
+        )
 
         logger.info(
-            "found match for input song: {}, {}".format(song.song, song.artist,)
+            "found match for input song: {}, {}".format(
+                song.song,
+                song.artist,
+            )
         )
 
         return spotify_song
     except Exception:
-        logger.info("no match for input song: {}, {}".format(song.song, song.artist,))
+        logger.info(
+            "no match for input song: {}, {}".format(
+                song.song,
+                song.artist,
+            )
+        )
 
         return None

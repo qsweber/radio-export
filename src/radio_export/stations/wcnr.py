@@ -35,4 +35,8 @@ class Wcnr(Base):
 
         song = td_with_text[2]
 
-        return Song(played_at=datetime.now(), artist=artist, song=song,)
+        return Song(
+            played_at=datetime.now(),
+            artist=artist,
+            song=song,
+        )

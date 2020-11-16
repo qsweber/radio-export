@@ -92,7 +92,9 @@ class SpotifyClient(object):
 
     def _get_playlist_url(self, playlist_id: str) -> str:
         return "{}/v1/users/{}/playlists/{}/tracks".format(
-            self.BASE_URL, self.user_id, playlist_id,
+            self.BASE_URL,
+            self.user_id,
+            playlist_id,
         )
 
     def get_song_uris(self, playlist_name: str) -> typing.Set[str]:
@@ -129,7 +131,10 @@ class SpotifyClient(object):
             self.session.post(url, data=payload)
 
     def find_spotify_uri(self, song_name: str, artist_name: str) -> str:
-        query = "track:{}+artist:{}".format(song_name, artist_name,)
+        query = "track:{}+artist:{}".format(
+            song_name,
+            artist_name,
+        )
 
         payload = {"query": query, "type": "track", "limit": "1"}
         payload_str = "&".join("{}={}".format(k, v) for k, v in payload.items())
@@ -144,7 +149,9 @@ class SpotifyClient(object):
 def raise_if_not_ok(r, *args, **kwargs) -> None:  # type: ignore
     if not r.ok and r.status_code != 429:
         error_message = "error code {}, reason {}, text {}".format(
-            r.status_code, r.reason, r.text,
+            r.status_code,
+            r.reason,
+            r.text,
         )
 
         raise Exception(error_message)

@@ -69,7 +69,8 @@ class SqsClient:
 
     def _url_for_queue(self, queue_name: str) -> str:
         return "https://us-west-2.queue.amazonaws.com/120356305272/{}-service-template-{}".format(
-            os.environ["STAGE"], queue_name,
+            os.environ["STAGE"],
+            queue_name,
         )
 
     def _url_from_arn(self, arn: str) -> str:
@@ -78,7 +79,9 @@ class SqsClient:
         account_id = arn_parts[4]
         queue_name = arn_parts[5]
         return "https://sqs.{}.amazonaws.com/{}/{}".format(
-            region, account_id, queue_name,
+            region,
+            account_id,
+            queue_name,
         )
 
     def _parse_sqs_message(self, raw: typing.Dict[str, typing.Any]) -> SqsMessage:

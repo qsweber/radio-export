@@ -11,7 +11,12 @@ from raven.transport.requests import RequestsHTTPTransport  # type: ignore
 
 
 app = Flask(__name__)
-sentry = Sentry(app, client=Client(transport=RequestsHTTPTransport,),)
+sentry = Sentry(
+    app,
+    client=Client(
+        transport=RequestsHTTPTransport,
+    ),
+)
 logger = logging.getLogger(__name__)
 
 

@@ -22,6 +22,7 @@ jobs:
           python-version: 3.9
       - name: Install Poetry
         uses: snok/install-poetry@v1
+      - run: poetry lock --check
       - run: poetry install
       - run: poetry run pytest --cov src/service_template --cov-report term --cov-report html
       - run: poetry run black --check .
@@ -30,7 +31,7 @@ jobs:
       - run: sh check_contains_template.sh
   deploy:
     needs: [build]
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     env:
       STAGE: test
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -38,9 +39,14 @@ jobs:
       AWS_DEFAULT_REGION: us-west-2
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: 3.9
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+      - run: poetry install --only main
       - run: |
           python3.8 -m venv deploy-env
           source deploy-env/bin/activate

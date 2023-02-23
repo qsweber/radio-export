@@ -3,7 +3,7 @@
         "app_function": "src.radio_export.app.http.app",
         "aws_region": "us-west-2",
         "project_name": "radio-export",
-        "runtime": "python3.8",
+        "runtime": "python3.9",
         "s3_bucket": "zappa-vmdaiuu2f",
         "log_level": "INFO",
         "keep_warm": false,

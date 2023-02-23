@@ -3,7 +3,7 @@ from typing import List, Optional
 import requests
 import logging
 
-from bs4 import BeautifulSoup  # type: ignore
+from bs4 import BeautifulSoup
 
 from radio_export.stations.base import Base, Song
 
@@ -22,12 +22,12 @@ class Wxpn(Base):
         soup = BeautifulSoup(response.text, "html.parser")
         body = soup.find("div", {"itemprop": "articleBody"})
 
-        title = body.find("div", {"class": "page-header"}).find_next("h2").text.strip()
+        title = body.find("div", {"class": "page-header"}).find_next("h2").text.strip()  # type: ignore
 
         rows = [
             row.text
-            for row in body.find("div", {"class": "ui-widget-content"})
-            .find("div", {"id": "accordion"})
+            for row in body.find("div", {"class": "ui-widget-content"})  # type: ignore
+            .find("div", {"id": "accordion"})  # type: ignore
             .findAll("h3")
             if not row.text.startswith("Like what you're hearing?")
             and "World Cafe" not in row.text

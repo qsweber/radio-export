@@ -6,15 +6,13 @@ on:
   pull_request:
     branches: [master]
   schedule:
-    - cron: '2 21 * * 4'
+    - cron: '45 21 * * 4'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     env:
       STAGE: TEST
-
     steps:
       - uses: actions/checkout@v3
         with:
@@ -42,4 +40,6 @@ jobs:
       - run: poetry install --only main
       - run: poetry run zappa update dev
       - run: poetry run zappa update production
-        if: github.event_name == 'push'
+        if: |
+          github.event_name == 'push' ||
+          github.event_name == 'schedule'

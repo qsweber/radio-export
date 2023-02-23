@@ -14,14 +14,9 @@ jobs:
       STAGE: TEST
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-python@v1
-        with:
-          python-version: 3.9
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - uses: snok/install-poetry@v1
       - run: poetry lock --check
       - run: poetry install
       - run: poetry run pytest --cov src/service_template --cov-report term --cov-report html
@@ -38,31 +33,9 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: us-west-2
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-python@v1
-        with:
-          python-version: 3.9
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - uses: snok/install-poetry@v1
       - run: poetry install --only main
-      - run: |
-          python3.8 -m venv deploy-env
-          source deploy-env/bin/activate
-          pip install -r requirements.txt
-          pip install zappa
-          pip install -e .
-
-      - name: deploy dev
-        run: |
-          source deploy-env/bin/activate
-          python deploy_helper.py dev
-          zappa update dev
-
-      - name: deploy production
-        if: github.event_name == 'push'
-        run: |
-          source deploy-env/bin/activate
-          python deploy_helper.py production
-          zappa update production
+      - run: zappa update dev
+      - run: zappa update production

@@ -40,3 +40,4 @@ jobs:
       - run: poetry install --only main
       - run: poetry run zappa update dev
       - run: poetry run zappa update production
+        if: github.event_name == 'push'

@@ -11,7 +11,12 @@ from raven.transport.requests import RequestsHTTPTransport  # type: ignore
 
 
 app = Flask(__name__)
-sentry = Sentry(app, client=Client(transport=RequestsHTTPTransport,),)
+sentry = Sentry(
+    app,
+    client=Client(
+        transport=RequestsHTTPTransport,
+    ),
+)
 logger = logging.getLogger(__name__)
 
 
@@ -37,12 +42,10 @@ def schema(
 
 @app.route("/api/v0/status", methods=["GET"])
 def status() -> Response:
-    logger.info("recieved request {}".format(json.dumps(request.json)))
-
     response = jsonify({"text": "ok"})
     response.headers.add("Access-Control-Allow-Origin", "*")
 
-    return typing.cast(Response, response)
+    return response
 
 
 @app.route("/api/v0/foo", methods=["POST", "GET"])
@@ -58,4 +61,4 @@ def status_typed() -> Response:
     response = jsonify(data)
     response.headers.add("Access-Control-Allow-Origin", "*")
 
-    return typing.cast(Response, response)
+    return response

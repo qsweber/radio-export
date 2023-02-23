@@ -21,9 +21,9 @@ jobs:
       - uses: snok/install-poetry@v1
       - run: poetry lock --check
       - run: poetry install
-      - run: poetry run pytest --cov src/service_template --cov-report term --cov-report html
+      - run: poetry run pytest --cov src/radio_export --cov-report term --cov-report html
       - run: poetry run black --check .
-      - run: poetry run mypy src/service_template --strict --txt-report .mypy && cat .mypy/index.txt
+      - run: poetry run mypy src/radio_export --strict --txt-report .mypy && cat .mypy/index.txt
       - run: sh check_contains_template.sh
   deploy:
     needs: [build]

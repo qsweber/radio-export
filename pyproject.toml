@@ -1,10 +1,12 @@
 [tool.poetry]
-name = "service-template"
+name = "radio-export"
 version = "0.1.0"
 description = "Template for backend services"
 authors = ["Quinn Weber <quinn@quinnweber.com>"]
 readme = "README.md"
-packages = [{include = "src"}]
+packages = [
+    { include = "radio_export", from = "src" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"

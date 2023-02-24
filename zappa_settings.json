@@ -8,9 +8,10 @@
         "log_level": "INFO",
         "keep_warm": false,
         "timeout_seconds": 60,
-        "events": [{
+        "events": [
+            {
                 "function": "src.radio_export.app.handlers.create_xpn_playlist",
-                "expression": "cron(18 3 ? * * *)"
+                "expression": "cron(18 10 ? * * *)"
             },
             {
                 "function": "src.radio_export.app.handlers.create_wcnr_playlist",

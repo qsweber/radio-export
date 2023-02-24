@@ -7,7 +7,8 @@
         "s3_bucket": "zappa-w4zj9g9gr",
         "log_level": "INFO",
         "timeout_seconds": 55,
-        "events": [{
+        "events": [
+            {
                 "function": "src.service_template.app.handlers.event_driven_task",
                 "event_source": {
                     "arn": "arn:aws:sqs:us-west-2:120356305272:DEV-service-template-event-driven",
@@ -33,7 +34,8 @@
         "s3_bucket": "zappa-w4zj9g9gr",
         "log_level": "INFO",
         "timeout_seconds": 55,
-        "events": [{
+        "events": [
+            {
                 "function": "src.service_template.app.handlers.event_driven_task",
                 "event_source": {
                     "arn": "arn:aws:sqs:us-west-2:120356305272:PROD-service-template-event-driven",

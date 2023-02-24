@@ -5,41 +5,40 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  schedule:
+    - cron: '45 20 * * 4'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      STAGE: TEST
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v1
-        with:
-          python-version: 3.8
-      - run: pip install tox
-      - run: tox
+      - uses: actions/setup-python@v4
+      - uses: snok/install-poetry@v1
+      - run: poetry lock --check
+      - run: poetry install
+      - run: poetry run pytest --cov src/radio_export --cov-report term --cov-report html
+      - run: poetry run black --check .
+      - run: poetry run mypy src/radio_export --strict --txt-report .mypy && cat .mypy/index.txt
+      - run: sh check_contains_template.sh
   deploy:
     needs: [build]
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     env:
+      STAGE: test
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: us-west-2
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
-        with:
-          python-version: 3.8
-      - run: |
-          python3.8 -m venv deploy-env
-          source deploy-env/bin/activate
-          pip install -r requirements.txt
-          pip install zappa
-          pip install -e .
-      - name: deploy production
-        if: github.event_name == 'push'
-        run: |
-          source deploy-env/bin/activate
-          python deploy_helper.py production
-          zappa update production
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - uses: snok/install-poetry@v1
+      - run: poetry install --only main
+      - run: poetry run zappa update production
+        if: |
+          github.event_name == 'push' ||
+          github.event_name == 'schedule'

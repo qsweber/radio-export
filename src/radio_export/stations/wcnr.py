@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any, List, Optional
 import requests
 
-from bs4 import BeautifulSoup  # type: ignore
+from bs4 import BeautifulSoup
 
 from radio_export.stations.base import Base, Song
 
@@ -18,7 +18,7 @@ class Wcnr(Base):
 
         soup = BeautifulSoup(response.text, "html.parser")
 
-        rows = soup.find("div", {"id": "page"}).find("table").find_all("tr")
+        rows = soup.find("div", {"id": "page"}).find("table").find_all("tr")  # type: ignore
         rows.pop(0)
 
         songs = [self._get_song_from_row(row) for row in rows]

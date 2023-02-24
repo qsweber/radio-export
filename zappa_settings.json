@@ -1,6 +1,6 @@
 {
     "dev": {
-        "app_function": "src.service_template.app.http.app",
+        "app_function": "service_template.app.http.app",
         "aws_region": "us-west-2",
         "project_name": "service-template",
         "runtime": "python3.9",
@@ -9,7 +9,7 @@
         "timeout_seconds": 55,
         "events": [
             {
-                "function": "src.service_template.app.handlers.event_driven_task",
+                "function": "service_template.app.handlers.event_driven_task",
                 "event_source": {
                     "arn": "arn:aws:sqs:us-west-2:120356305272:DEV-service-template-event-driven",
                     "batch_size": 1,
@@ -17,7 +17,7 @@
                 }
             },
             {
-                "function": "src.service_template.app.handlers.time_driven_task",
+                "function": "service_template.app.handlers.time_driven_task",
                 "expression": "cron(18 3 ? * * *)",
                 "enabled": false
             }
@@ -27,7 +27,7 @@
         }
     },
     "production": {
-        "app_function": "src.service_template.app.http.app",
+        "app_function": "service_template.app.http.app",
         "aws_region": "us-west-2",
         "project_name": "service-template",
         "runtime": "python3.9",
@@ -36,7 +36,7 @@
         "timeout_seconds": 55,
         "events": [
             {
-                "function": "src.service_template.app.handlers.event_driven_task",
+                "function": "service_template.app.handlers.event_driven_task",
                 "event_source": {
                     "arn": "arn:aws:sqs:us-west-2:120356305272:PROD-service-template-event-driven",
                     "batch_size": 1,
@@ -44,7 +44,7 @@
                 }
             },
             {
-                "function": "src.service_template.app.handlers.time_driven_task",
+                "function": "service_template.app.handlers.time_driven_task",
                 "expression": "cron(18 3 ? * * *)",
                 "enabled": false
             }

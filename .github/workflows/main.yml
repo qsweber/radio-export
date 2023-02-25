@@ -38,8 +38,8 @@ jobs:
       - uses: actions/setup-python@v4
       - uses: snok/install-poetry@v1
       - run: poetry install --only main
-      - run: poetry run zappa update dev
-      - run: poetry run zappa update production
+      - run: cd src && poetry run zappa update dev -s ../zappa_settings.json && cd ..
+      - run: cd src && poetry run zappa update production -s ../zappa_settings.json && cd ..
         if: |
           github.event_name == 'push' ||
           github.event_name == 'schedule'

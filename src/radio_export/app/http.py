@@ -1,5 +1,4 @@
 import logging
-import json
 import typing
 
 from jsonschema import validate  # type: ignore

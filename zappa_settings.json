@@ -1,6 +1,6 @@
 {
     "production": {
-        "app_function": "src.radio_export.app.http.app",
+        "app_function": "radio_export.app.http.app",
         "aws_region": "us-west-2",
         "project_name": "radio-export",
         "runtime": "python3.9",
@@ -10,15 +10,15 @@
         "timeout_seconds": 60,
         "events": [
             {
-                "function": "src.radio_export.app.handlers.create_xpn_playlist",
+                "function": "radio_export.app.handlers.create_xpn_playlist",
                 "expression": "cron(18 10 ? * * *)"
             },
             {
-                "function": "src.radio_export.app.handlers.create_wcnr_playlist",
+                "function": "radio_export.app.handlers.create_wcnr_playlist",
                 "expression": "cron(5 12 ? * MON *)"
             },
             {
-                "function": "src.radio_export.app.handlers.create_kexp_playlist",
+                "function": "radio_export.app.handlers.create_kexp_playlist",
                 "expression": "cron(18 5 ? * * *)"
             }
         ]

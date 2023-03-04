@@ -11,13 +11,19 @@ logger = logging.getLogger(__name__)
 def create_playlist(station: Station, service_context: ServiceContext) -> None:
     songs = station.get_current_songs()
 
+    logger.info("Found {} songs".format(len(songs)))
+
     new_uris: typing.Set[str] = set()
     for song in songs:
         uri = _find_spotify_song(song, service_context.clients.spotify)
         if uri:
             new_uris.add(uri)
 
+    logger.info("Total Songs: {}, Matched: {}".format(len(songs), len(new_uris)))
+
     current_uris = service_context.clients.spotify.get_song_uris(station.playlist_name)
+
+    logger.info("Playlist currently has {}".format(len(current_uris)))
 
     service_context.clients.spotify.delete_songs_from_playlist(
         station.playlist_name,
@@ -29,7 +35,7 @@ def create_playlist(station: Station, service_context: ServiceContext) -> None:
         new_uris,
     )
 
-    logger.info("Total Songs: {}, Matched: {}".format(len(songs), len(new_uris)))
+    logger.info("Added new songs, complete!")
 
 
 def _find_spotify_song(

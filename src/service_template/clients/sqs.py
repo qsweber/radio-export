@@ -1,8 +1,8 @@
-from datetime import datetime
 import json
 import logging
 import os
 import typing
+from datetime import datetime
 from uuid import UUID
 
 import boto3  # type: ignore

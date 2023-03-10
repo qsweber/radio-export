@@ -23,6 +23,8 @@ jobs:
       - run: poetry install
       - run: poetry run pytest --cov src/service_template --cov-report term --cov-report html
       - run: poetry run black --check .
+      - run: poetry run isort --check .
+      - run: poetry run flake8
       - run: poetry run mypy src/service_template --strict --txt-report .mypy && cat .mypy/index.txt
       - run: sh check_contains_template.sh
   deploy:

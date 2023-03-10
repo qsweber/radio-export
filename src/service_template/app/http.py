@@ -1,11 +1,11 @@
 import logging
 import typing
+
+from flask import Flask, Response, jsonify, request
 from jsonschema import validate  # type: ignore
-from flask import Flask, jsonify, request, Response
 from raven import Client  # type: ignore
 from raven.contrib.flask import Sentry  # type: ignore
 from raven.transport.requests import RequestsHTTPTransport  # type: ignore
-
 
 app = Flask(__name__)
 sentry = Sentry(

@@ -4,9 +4,8 @@ import typing
 from raven import Client  # type: ignore
 from raven.transport.requests import RequestsHTTPTransport  # type: ignore
 
-from service_template.clients.sqs import SqsMessage
 from service_template.app.service_context import service_context
-
+from service_template.clients.sqs import SqsMessage
 
 sentry = Client(transport=RequestsHTTPTransport)
 logger = logging.getLogger(__name__)

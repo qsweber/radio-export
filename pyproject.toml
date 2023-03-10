@@ -40,3 +40,6 @@ build-backend = "poetry.core.masonry.api"
 pythonpath = [
   ".", "src",
 ]
+
+[tool.isort]
+profile = "black"

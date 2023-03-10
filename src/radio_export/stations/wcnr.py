@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, List, Optional
-import requests
 
+import requests
 from bs4 import BeautifulSoup
 
 from radio_export.stations.base import Base, Song

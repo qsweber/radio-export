@@ -1,8 +1,8 @@
+import logging
 from datetime import datetime, timedelta
 from typing import List
-import requests
-import logging
 
+import requests
 
 from radio_export.stations.base import Base, Song
 

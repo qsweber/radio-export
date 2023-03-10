@@ -1,9 +1,9 @@
 from typing import NamedTuple
 
 from radio_export.clients.spotify import SpotifyClient
+from radio_export.stations.kexp import Kexp
 from radio_export.stations.wcnr import Wcnr
 from radio_export.stations.wxpn import Wxpn
-from radio_export.stations.kexp import Kexp
 
 
 class Clients(NamedTuple):

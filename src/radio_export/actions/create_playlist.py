@@ -3,7 +3,8 @@ import typing
 
 from radio_export.app.service_context import ServiceContext
 from radio_export.clients.spotify import SpotifyClient
-from radio_export.stations.base import Base as Station, Song
+from radio_export.stations.base import Base as Station
+from radio_export.stations.base import Song
 
 logger = logging.getLogger(__name__)
 

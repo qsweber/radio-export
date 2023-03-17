@@ -4,11 +4,10 @@ import typing
 from raven import Client  # type: ignore
 from raven.transport.requests import RequestsHTTPTransport  # type: ignore
 
-from radio_export.app.service_context import service_context
 from radio_export.actions.create_playlist import (
     create_playlist as create_playlist_action,
 )
-
+from radio_export.app.service_context import service_context
 
 sentry = Client(transport=RequestsHTTPTransport)
 logger = logging.getLogger(__name__)

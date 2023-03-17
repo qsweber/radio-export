@@ -1,8 +1,9 @@
-from datetime import datetime
 import json
-from typing import List
-import requests
+from datetime import datetime
 from time import sleep
+from typing import List
+
+import requests
 
 from radio_export.stations.base import Base, Song
 

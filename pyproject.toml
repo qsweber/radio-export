@@ -11,7 +11,7 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.9"
 boto3 = "^1.26.75"
-flask = "^2.2.3"
+flask = "^2.3.2"
 jsonschema = "^4.17.3"
 raven = {extras = ["flask"], version = "^6.10.0"}
 zappa = "^0.56.1"
